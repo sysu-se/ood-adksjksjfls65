@@ -1,0 +1,19 @@
+name: Generate Lock File
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Generate Lock
+        run: |
+          npm install --package-lock-only
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add package-lock.json
+          git commit -m 'chore: auto-generate package-lock.json'
+          git push
