@@ -1,12 +1,23 @@
 <script>
-	import ActionBar from './ActionBar/index.svelte';
-	import Keyboard from './Keyboard.svelte';
+    import { userGrid } from '../../node_modules/@sudoku/stores/grid';
+    let isExploring = false;
+    let exploreSnapshot = null;
+
+    function toggleExplore() {
+        if (!isExploring) {
+            exploreSnapshot = userGrid.getSencode();
+            isExploring = true;
+        } else {
+            if (confirm("提交探索结果吗？放弃将回退。")) {
+                isExploring = false;
+            } else {
+                userGrid.decodeSencode(exploreSnapshot);
+                isExploring = false;
+            }
+        }
+    }
 </script>
 
-<div class="px-4 pb-5 flex justify-center">
-	<div class="w-full max-w-xl">
-		<ActionBar />
-
-		<Keyboard />
-	</div>
-</div>
+<button on:click={toggleExplore}>
+    {isExploring ? "结束探索" : "开始探索"}
+</button>
